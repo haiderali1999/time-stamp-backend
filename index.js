@@ -24,7 +24,9 @@ app.get("/api/:id", (req, res) => {
   const { url } = req
   const date = url.split("api/")
   if (url.includes("-")) {
-    res.json({ unix: Date.parse(date[1]), utc: date[1] }).status(304)
+    res
+      .json({ unix: Date.parse(date[1]), utc: new Date(date[1]).toUTCString() })
+      .status(304)
   } else if (!url.includes("-")) {
     res
       .json({ unix: date[1], utc: new Date(parseInt(date[1])).toUTCString() })
