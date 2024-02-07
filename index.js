@@ -23,23 +23,23 @@ app.get("/api/:id", (req, res) => {
   debugger
   const { url } = req
   const date = url.split("api/")
-  const check = new Date(date).toDateString()
+  const validDate = new Date(parseInt(date[1])).toUTCString()
 
-  if (check === "Invalid Date") {
-    res.json({ error: check })
+  if (validDate === "Invalid Date") {
+    res.json({ error: validDate })
   } else {
     if (url.includes("-")) {
       res
         .json({
           unix: Date.parse(date[1]),
-          utc: new Date(date[1]).toUTCString(),
+          utc: validDate,
         })
         .status(304)
     } else if (!url.includes("-")) {
       res
         .json({
           unix: parseInt(date[1]),
-          utc: new Date(parseInt(date[1])).toUTCString(),
+          utc: validDate,
         })
         .status(304)
     }
