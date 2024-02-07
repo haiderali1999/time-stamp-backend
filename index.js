@@ -22,6 +22,7 @@ app.listen(port, () => {
 app.get("/api/:date", (req, res) => {
   debugger
   const { date } = req.params
+  let utcDate = new Date(date).toUTCString()
 
   if (date.includes("-")) {
     // utc format
