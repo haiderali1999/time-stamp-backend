@@ -36,7 +36,7 @@ app.get("/api/:date", (req, res) => {
       const _date = new Date(date)
       res.json({
         unix: _date.valueOf(),
-        utc: _date.toUTCString(),
+        utc: utcDate,
       })
     }
 
@@ -49,7 +49,7 @@ app.get("/api/:date", (req, res) => {
     } else {
       res.json({
         unix: parseInt(date),
-        utc: new Date(parseInt(date)).toUTCString(),
+        utc: utcDate,
       })
     }
   }
