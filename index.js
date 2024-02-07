@@ -22,27 +22,23 @@ app.listen(port, () => {
 app.get("/api/:id", (req, res) => {
   debugger
   const { url } = req
-  const date = url.split("api/")
-  const validDate = new Date(parseInt(date[1])).toUTCString()
+  const date = url.split("api/")[1]
 
-  if (validDate === "Invalid Date") {
-    res.json({ error: validDate })
-  } else {
-    if (url.includes("-")) {
-      res
-        .json({
-          unix: Date.parse(validDate),
-          utc: validDate,
-        })
-        .status(304)
-    } else if (!url.includes("-")) {
-      res
-        .json({
-          unix: parseInt(validDate),
-          utc: validDate,
-        })
-        .status(304)
-    }
+  if (url.includes("-")) {
+    res
+      .json({
+        unix: new Date(date).valueOf(),
+        utc: new Date(date).toUTCString(),
+      })
+      .status(304)
+  } else if (!url.includes("-")) {
+    const parseDate = parseInt(date)
+    res
+      .json({
+        unix: parseDate,
+        utc: new Date(parseDate).toUTCString(),
+      })
+      .status(304)
   }
 })
 
