@@ -19,45 +19,28 @@ app.listen(port, () => {
   console.log(`server is listing on ${port} port`)
 })
 
+const isInValid = (date) => date.toUTCString() === "Invalid Date"
+
 app.get("/api/:date", (req, res) => {
   debugger
-  const { date } = req.params
-  let utcDate = new Date(date).toUTCString()
-
-  if (date.includes("-")) {
-    // utc format
-    const valid = new Date(date).toString()
-
-    if (valid === "Invalid Date") {
-      res.json({
-        error: valid,
-      })
-    } else {
-      const _date = new Date(date)
-      res.json({
-        unix: _date.valueOf(),
-        utc: utcDate,
-      })
-    }
-
-  } else if (!date.includes("-")) {
-    const valid = new Date(parseInt(date)).toString()
-    if (valid === "Invalid Date") {
-      res.json({
-        error: valid,
-      })
-    } else {
-      res.json({
-        unix: parseInt(date),
-        utc: utcDate,
-      })
-    }
+  let { date } = req.params
+  date = new Date(date)
+  if (isInValid(date)) {
+    date = new Date(+req.params.date)
   }
+
+  if (isInValid(date)) {
+    res.json({ error: "Invalid Date" });
+    return;
+  }
+
+  res.json({unix:date.getTime(),utc:date.toUTCString()})
+
 })
 
 app.get("/api", (req, res) => {
   const date = new Date()
-  res.json({ unix: date.valueOf(), utc: date.toUTCString() }).status(304)
+  res.json({ unix: new Date().getTime(), utc: date.toUTCString() }).status(304)
 })
 
 app.get("/alive", (req, res) => {
