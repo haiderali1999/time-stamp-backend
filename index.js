@@ -25,12 +25,19 @@ app.get("/api/:date", (req, res) => {
 
   if (date.includes("-")) {
     // utc format
-    const _date = new Date(date)
+    const valid = new Date(date).toString()
 
-    res.json({
-      unix: _date.valueOf(),
-      utc: _date.toUTCString(),
-    })
+    if (valid === "Invalid Date") {
+      res.json({
+        error: valid,
+      })
+    } else {
+      const _date = new Date(date)
+      res.json({
+        unix: _date.valueOf(),
+        utc: _date.toUTCString(),
+      })
+    }
 
   } else if (!date.includes("-")) {
     const valid = new Date(parseInt(date)).toString()
@@ -48,8 +55,8 @@ app.get("/api/:date", (req, res) => {
 })
 
 app.get("/api", (req, res) => {
-  const date = new Date().toUTCString()
-  res.json({ unix: Date.parse(date), utc: date }).status(304)
+  const date = new Date()
+  res.json({ unix: date.valueOf(), utc: date.toUTCString() }).status(304)
 })
 
 app.get("/alive", (req, res) => {
