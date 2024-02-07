@@ -19,31 +19,38 @@ app.listen(port, () => {
   console.log(`server is listing on ${port} port`)
 })
 
-app.get("/api/:id", (req, res) => {
-  debugger
+app.get("/api/:date", (req, res) => {
   const { url } = req
   const date = url.split("api/")[1]
-
-  if (url.includes("-")) {
-    res
-      .json({
-        unix: new Date(date).valueOf(),
-        utc: new Date(date).toUTCString(),
+  if (date.includes("-")) {
+    // utc format
+    const _date = new Date(date)
+    if (_date === "Invalid Date") {
+      res.json({
+        error: _date,
       })
-      .status(304)
-  } else if (!url.includes("-")) {
-    const parseDate = parseInt(date)
-    res
-      .json({
-        unix: parseDate,
-        utc: new Date(parseDate).toUTCString(),
+    } else {
+      res.json({
+        unix: _date.valueOf(),
+        utc: _date.toUTCString(),
       })
-      .status(304)
+    }
+  } else if (!date.includes("-")) {
+    const valid = new Date(parseInt(date)).toString()
+    if (valid === "Invalid Date") {
+      res.json({
+        error: "Invalid Date",
+      })
+    } else {
+      res.json({
+        unix: parseInt(date),
+        utc: new Date(parseInt(date)).toUTCString(),
+      })
+    }
   }
 })
 
 app.get("/api", (req, res) => {
-  debugger
   const date = new Date().toUTCString()
   res.json({ unix: Date.parse(date), utc: date }).status(304)
 })
