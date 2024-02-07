@@ -31,14 +31,14 @@ app.get("/api/:id", (req, res) => {
     if (url.includes("-")) {
       res
         .json({
-          unix: Date.parse(date[1]),
+          unix: Date.parse(validDate),
           utc: validDate,
         })
         .status(304)
     } else if (!url.includes("-")) {
       res
         .json({
-          unix: parseInt(date[1]),
+          unix: parseInt(validDate),
           utc: validDate,
         })
         .status(304)
@@ -49,7 +49,7 @@ app.get("/api/:id", (req, res) => {
 app.get("/api", (req, res) => {
   debugger
   const date = new Date().toUTCString()
-  res.json({ unix: Date.parse(date) }).status(304)
+  res.json({ unix: Date.parse(date), utc: date }).status(304)
 })
 
 app.get("/alive", (req, res) => {
